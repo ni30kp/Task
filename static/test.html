@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test - Donizo Search</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .material {
+        border: 1px solid #ccc;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 5px;
+      }
+      .error {
+        color: red;
+        background: #ffe6e6;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .loading {
+        text-align: center;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔍 Simple Search Test</h1>
+
+    <form onsubmit="testSearch(event)">
+      <input
+        type="text"
+        id="query"
+        value="waterproof adhesive for bathroom tiles"
+        style="width: 400px; padding: 10px"
+      />
+      <button type="submit">Search</button>
+    </form>
+
+    <div id="results"></div>
+
+    <script>
+      async function testSearch(event) {
+        event.preventDefault();
+
+        const query = document.getElementById("query").value;
+        const resultsDiv = document.getElementById("results");
+
+        resultsDiv.innerHTML = '<div class="loading">Searching...</div>';
+
+        try {
+          const url = `http://localhost:8000/material-price?query=${encodeURIComponent(
+            query
+          )}&limit=3`;
+          console.log("Fetching:", url);
+
+          const response = await fetch(url);
+          const data = await response.json();
+
+          console.log("Response:", response.status, data);
+
+          if (response.ok) {
+            if (data.length === 0) {
+              resultsDiv.innerHTML = "<p>No results found</p>";
+              return;
+            }
+
+            let html = `<h3>Found ${data.length} materials:</h3>`;
+
+            data.forEach((material) => {
+              html += `
+                            <div class="material">
+                                <h4>${material.material_name}</h4>
+                                <p><strong>Price:</strong> €${
+                                  material.unit_price
+                                } ${material.unit}</p>
+                                <p><strong>Region:</strong> ${
+                                  material.region
+                                }</p>
+                                <p><strong>Confidence:</strong> ${
+                                  material.confidence_tier
+                                } (${(material.similarity_score * 100).toFixed(
+                1
+              )}%)</p>
+                                                                 <p><strong>Description:</strong> ${
+                                                                   material.description
+                                                                 }</p>
+                                 <p><strong>Vendor:</strong> ${
+                                   material.vendor || "Unknown"
+                                 }</p>
+                            </div>
+                        `;
+            });
+
+            resultsDiv.innerHTML = html;
+          } else {
+            resultsDiv.innerHTML = `<div class="error">Error: ${JSON.stringify(
+              data
+            )}</div>`;
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          resultsDiv.innerHTML = `<div class="error">Network error: ${error.message}</div>`;
+        }
+      }
+    </script>
+  </body>
+</html>

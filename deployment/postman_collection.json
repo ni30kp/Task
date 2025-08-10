@@ -1,0 +1,175 @@
+{
+  "info": {
+    "name": "Donizo Semantic Pricing Engine",
+    "description": "Comprehensive API tests for Donizo pricing intelligence system",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Material Search - Basic",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/material-price?query=white ceramic tiles bathroom&limit=5",
+          "host": ["{{base_url}}"],
+          "path": ["material-price"],
+          "query": [
+            {"key": "query", "value": "white ceramic tiles bathroom"},
+            {"key": "limit", "value": "5"}
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Material Search - French Query",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/material-price?query=colle carrelage salle de bain étanche&limit=3",
+          "host": ["{{base_url}}"],
+          "path": ["material-price"],
+          "query": [
+            {"key": "query", "value": "colle carrelage salle de bain étanche"},
+            {"key": "limit", "value": "3"}
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Material Search - With Filters",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/material-price?query=paint&region=Île-de-France&quality_min=4&limit=5",
+          "host": ["{{base_url}}"],
+          "path": ["material-price"],
+          "query": [
+            {"key": "query", "value": "paint"},
+            {"key": "region", "value": "Île-de-France"},
+            {"key": "quality_min", "value": "4"},
+            {"key": "limit", "value": "5"}
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Generate Quote - Bathroom Renovation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transcript\": \"Need waterproof glue and 60x60cm matte white wall tiles, better quality this time. For bathroom walls in Paris\",\n  \"region\": \"Île-de-France\",\n  \"project_type\": \"renovation\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/generate-proposal",
+          "host": ["{{base_url}}"],
+          "path": ["generate-proposal"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Generate Quote - Living Room Paint",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transcript\": \"I want to paint the living room walls, maybe 30 square meters. Something durable and washable. I'm in Marseille.\",\n  \"region\": \"Provence-Alpes-Côte d'Azur\",\n  \"project_type\": \"renovation\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/generate-proposal",
+          "host": ["{{base_url}}"],
+          "path": ["generate-proposal"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Submit Feedback - Positive",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quote_id\": \"{{quote_id}}\",\n  \"user_type\": \"contractor\",\n  \"verdict\": \"accurate\",\n  \"comment\": \"Quote was very accurate, materials were exactly what I needed\",\n  \"feedback_category\": \"overall\",\n  \"rating\": 5\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/feedback",
+          "host": ["{{base_url}}"],
+          "path": ["feedback"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Submit Feedback - Price Concern",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quote_id\": \"{{quote_id}}\",\n  \"user_type\": \"client\",\n  \"verdict\": \"overpriced\",\n  \"comment\": \"Seems a bit expensive for this region\",\n  \"feedback_category\": \"material\",\n  \"rating\": 2\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/feedback",
+          "host": ["{{base_url}}"],
+          "path": ["feedback"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "quote_id",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

@@ -1,0 +1,273 @@
+{
+  "info": {
+    "name": "Donizo Complete Semantic Pricing Engine",
+    "description": "Complete API collection following exact specifications",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Step 4: Semantic Match API",
+      "item": [
+        {
+          "name": "Basic Semantic Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/material-price?query=cement white waterproof glue&region=Île-de-France",
+              "host": ["{{base_url}}"],
+              "path": ["material-price"],
+              "query": [
+                {"key": "query", "value": "cement white waterproof glue"},
+                {"key": "region", "value": "Île-de-France"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Fuzzy Query Test",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/material-price?query=strong glue for shower tiles not cheap white&limit=5",
+              "host": ["{{base_url}}"],
+              "path": ["material-price"],
+              "query": [
+                {"key": "query", "value": "strong glue for shower tiles not cheap white"},
+                {"key": "limit", "value": "5"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Multilingual French Query",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/material-price?query=colle carrelage salle de bain PACA&region=Provence-Alpes-Côte d'Azur",
+              "host": ["{{base_url}}"],
+              "path": ["material-price"],
+              "query": [
+                {"key": "query", "value": "colle carrelage salle de bain PACA"},
+                {"key": "region", "value": "Provence-Alpes-Côte d'Azur"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filtered Search with All Parameters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/material-price?query=ceramic tiles&region=Île-de-France&quality_min=4&vendor=Leroy Merlin&limit=3",
+              "host": ["{{base_url}}"],
+              "path": ["material-price"],
+              "query": [
+                {"key": "query", "value": "ceramic tiles"},
+                {"key": "region", "value": "Île-de-France"},
+                {"key": "quality_min", "value": "4"},
+                {"key": "vendor", "value": "Leroy Merlin"},
+                {"key": "limit", "value": "3"}
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Step 5: Quote Generator API",
+      "item": [
+        {
+          "name": "Bathroom Renovation Quote (10% VAT)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transcript\": \"Need waterproof glue and 60x60cm matte white wall tiles, better quality this time. For bathroom walls in Paris\",\n  \"region\": \"Île-de-France\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/generate-proposal",
+              "host": ["{{base_url}}"],
+              "path": ["generate-proposal"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Construction Quote (20% VAT)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transcript\": \"Building new house foundation. Need cement and structural materials. This is new construction work.\",\n  \"region\": \"Île-de-France\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/generate-proposal",
+              "host": ["{{base_url}}"],
+              "path": ["generate-proposal"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Complex Multi-Task Renovation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transcript\": \"Complete bathroom renovation: waterproof tiles for walls, strong adhesive, and high-quality paint for moisture protection. Need professional grade materials.\",\n  \"region\": \"Provence-Alpes-Côte d'Azur\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/generate-proposal",
+              "host": ["{{base_url}}"],
+              "path": ["generate-proposal"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Step 6: Feedback Endpoint",
+      "item": [
+        {
+          "name": "Contractor Feedback - Overpriced",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"task_id\": \"abc123\",\n  \"quote_id\": \"q456\",\n  \"user_type\": \"contractor\",\n  \"verdict\": \"overpriced\",\n  \"comment\": \"Material was fine, tile price seems high for Paris market\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/feedback",
+              "host": ["{{base_url}}"],
+              "path": ["feedback"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Client Feedback - Wrong Material",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"task_id\": \"task_tiles\",\n  \"quote_id\": \"quote_bathroom_001\",\n  \"user_type\": \"client\",\n  \"verdict\": \"wrong_material\",\n  \"comment\": \"The selected tiles are not suitable for bathroom walls. Need different specification.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/feedback",
+              "host": ["{{base_url}}"],
+              "path": ["feedback"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supplier Feedback - Accurate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"task_id\": \"adhesive_task\",\n  \"quote_id\": \"quote_renovation_002\",\n  \"user_type\": \"supplier\",\n  \"verdict\": \"accurate\",\n  \"comment\": \"Perfect material selection and pricing for this type of project.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/feedback",
+              "host": ["{{base_url}}"],
+              "path": ["feedback"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Performance & Edge Case Tests",
+      "item": [
+        {
+          "name": "Performance Test - Multiple Quick Searches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/material-price?query=waterproof adhesive performance test {{$randomInt}}&limit=5",
+              "host": ["{{base_url}}"],
+              "path": ["material-price"],
+              "query": [
+                {"key": "query", "value": "waterproof adhesive performance test {{$randomInt}}"},
+                {"key": "limit", "value": "5"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edge Case - Very Long Query",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/material-price?query=waterproof ceramic tiles for bathroom renovation project with high quality materials and professional grade adhesive suitable for wet areas and shower installation with matte finish and anti-slip properties&limit=5",
+              "host": ["{{base_url}}"],
+              "path": ["material-price"],
+              "query": [
+                {"key": "query", "value": "waterproof ceramic tiles for bathroom renovation project with high quality materials and professional grade adhesive suitable for wet areas and shower installation with matte finish and anti-slip properties"},
+                {"key": "limit", "value": "5"}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edge Case - Multilingual Mixed Query",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/material-price?query=carrelage waterproof salle de bain tiles étanche&region=Belgium&limit=5",
+              "host": ["{{base_url}}"],
+              "path": ["material-price"],
+              "query": [
+                {"key": "query", "value": "carrelage waterproof salle de bain tiles étanche"},
+                {"key": "region", "value": "Belgium"},
+                {"key": "limit", "value": "5"}
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ]
+}
