@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 """
-DONIZO SEMANTIC PRICING ENGINE - CONFIGURATION MANAGEMENT
-========================================================
-
-Centralized configuration management with environment variable support
+Configuration management for Donizo Semantic Pricing Engine
 """
 
 import os
@@ -145,35 +142,35 @@ class Settings:
     def print_config_summary(self):
         """Print a summary of the current configuration"""
         print(f"""
-🔧 DONIZO CONFIGURATION SUMMARY
+DONIZO CONFIGURATION SUMMARY
 ==============================
 
-📱 Application:
+Application:
    • Name: {self.app.name}
    • Version: {self.app.version}
    • Target Materials: {self.app.materials_target:,}
    • Response Time Target: {self.app.response_time_target}ms
 
-🗄️  Database:
+Database:
    • URL: {self.get_database_url()}
    • Vector Dimension: {self.get_vector_dimension()}D
 
-🤖 AI Models:
-   • OpenAI Available: {'✅ YES' if self.has_openai_key() else '❌ NO'}
+AI Models:
+   • OpenAI Available: {'YES' if self.has_openai_key() else 'NO'}
    • Primary Model: {self.openai.model if self.has_openai_key() else 'N/A'}
    • Fallback Model: {self.fallback.model}
 
-🌍 Multilingual:
+Multilingual:
    • Supported: {', '.join(self.multilingual.supported_languages)}
    • Default: {self.multilingual.default_language}
 
-💰 Business Logic:
+Business Logic:
    • Margin Rate: {self.business.margin_rate*100:.1f}%
    • VAT (Renovation): {self.business.vat_renovation*100:.1f}%
    • VAT (New Build): {self.business.vat_new_build*100:.1f}%
    • Labor Rate: €{self.business.labor_rate_per_hour}/hour
 
-🚀 Server:
+Server:
    • Host: {self.server.host}
    • Port: {self.server.port}
    • Debug: {self.server.debug}

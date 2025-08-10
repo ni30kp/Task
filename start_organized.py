@@ -25,7 +25,7 @@ def check_environment_file():
     
     for env_file in env_files:
         if Path(env_file).exists():
-            print(f"✅ Environment file found: {env_file}")
+            print(f"Environment file found: {env_file}")
             return env_file
     
     print("⚠️  No environment file found, creating from template...")
@@ -83,7 +83,7 @@ def check_dependencies():
         import openai
         import sentence_transformers
         import pydantic_settings
-        print("✅ Core dependencies found")
+        print("Core dependencies found")
         return True
     except ImportError as e:
         print(f"❌ Missing dependency: {e}")
@@ -103,7 +103,7 @@ def check_database():
             user="postgres"
         )
         conn.close()
-        print("✅ PostgreSQL is running")
+        print("PostgreSQL is running")
         
         # Try to connect to our database
         try:
@@ -114,7 +114,7 @@ def check_database():
                 user="postgres"
             )
             conn.close()
-            print("✅ Database 'donizo_production' exists")
+            print("Database 'donizo_production' exists")
         except psycopg2.OperationalError:
             print("⚠️  Database 'donizo_production' not found, will create it")
             create_database()
@@ -158,7 +158,7 @@ def create_database():
         cursor.close()
         conn.close()
         
-        print("✅ Database 'donizo_production' created with pgvector")
+        print("Database 'donizo_production' created with pgvector")
         
     except Exception as e:
         print(f"❌ Failed to create database: {e}")
@@ -177,7 +177,7 @@ def check_openai_key():
                 model="text-embedding-3-small",
                 input="test"
             )
-            print("✅ OpenAI API key is valid")
+            print("OpenAI API key is valid")
             return True
         else:
             print("⚠️  No OpenAI API key configured - will use fallback model")
@@ -192,7 +192,7 @@ def check_openai_key():
 
 def start_application():
     """Start the organized application"""
-    print("\n🚀 Starting Donizo Semantic Pricing Engine (Organized Version)...")
+    print("\nStarting Donizo Semantic Pricing Engine...")
     print("=" * 60)
     
     try:
@@ -238,7 +238,7 @@ Initializing semantic pricing engine...
     ]
     
     for check_name, check_func in checks:
-        print(f"\n🔍 Checking {check_name}...")
+        print(f"\nChecking {check_name}...")
         try:
             result = check_func()
             if result is False:
@@ -248,7 +248,7 @@ Initializing semantic pricing engine...
             print(f"❌ {check_name} check failed: {e}")
             sys.exit(1)
     
-    print("\n✅ All checks passed!")
+    print("\nAll checks passed!")
     
     # Start the application
     start_application()

@@ -153,7 +153,7 @@ class OrganizedSemanticPricingEngine:
         self._initialize_system()
     
     def _initialize_system(self):
-        """Initialize the production system with configuration"""
+        """Initialize the system"""
         logger.info(f"Initializing {self.settings.app.name} v{self.settings.app.version}...")
         
         # Print configuration summary
@@ -169,7 +169,7 @@ class OrganizedSemanticPricingEngine:
                     model=self.settings.openai.model,
                     input="test connection"
                 )
-                logger.info(f"✅ OpenAI {self.settings.openai.model} initialized ({self.settings.vector.openai_dimension}D)")
+                logger.info(f"OpenAI {self.settings.openai.model} initialized ({self.settings.vector.openai_dimension}D)")
             except Exception as e:
                 logger.warning(f"OpenAI initialization failed: {e}")
                 self.openai_client = None
@@ -179,7 +179,7 @@ class OrganizedSemanticPricingEngine:
         # Initialize fallback model
         try:
             self.sentence_model = SentenceTransformer(self.settings.fallback.model)
-            logger.info(f"✅ Fallback model loaded: {self.settings.fallback.model} ({self.settings.vector.fallback_dimension}D)")
+            logger.info(f"Fallback model loaded: {self.settings.fallback.model} ({self.settings.vector.fallback_dimension}D)")
         except Exception as e:
             logger.error(f"Failed to load fallback model: {e}")
             if not self.openai_client:
@@ -191,22 +191,21 @@ class OrganizedSemanticPricingEngine:
         # Load or generate materials
         self._load_materials()
         
-        logger.info(f"✅ System initialized with {len(self.materials_cache)} materials")
-        logger.info(f"🎯 Target response time: {self.settings.app.response_time_target}ms")
+        logger.info(f"System initialized with {len(self.materials_cache)} materials")
+        logger.info(f"Target response time: {self.settings.app.response_time_target}ms")
     
     def _setup_database(self):
-        """Set up PostgreSQL database with pgvector schema"""
+        """Setup database with pgvector"""
         try:
             conn = psycopg2.connect(self.db_url)
             cursor = conn.cursor()
             
-            # Always use fallback model dimensions for consistency
             embedding_dim = self.settings.vector.fallback_dimension
             default_model = self.settings.fallback.model
             
-            logger.info(f"🗄️  Setting up database with {embedding_dim}D vectors for {default_model}")
+            logger.info(f"Setting up database with {embedding_dim}D vectors for {default_model}")
             
-            # Create materials table with appropriate vector column
+            # Create materials table
             cursor.execute(f"""
                 CREATE TABLE IF NOT EXISTS materials (
                     material_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -268,7 +267,7 @@ class OrganizedSemanticPricingEngine:
             """)
             
             conn.commit()
-            logger.info("✅ Database schema initialized with pgvector")
+            logger.info("Database schema initialized with pgvector")
             
         except Exception as e:
             logger.error(f"Database setup failed: {e}")
@@ -280,7 +279,7 @@ class OrganizedSemanticPricingEngine:
                 conn.close()
     
     def _load_materials(self):
-        """Load materials from database or generate if empty"""
+        """Load materials from database"""
         try:
             conn = psycopg2.connect(self.db_url)
             cursor = conn.cursor()
@@ -315,7 +314,7 @@ class OrganizedSemanticPricingEngine:
                     'updated_at': row[10].isoformat() if row[10] else None
                 }
             
-            logger.info(f"✅ Loaded {len(self.materials_cache)} materials from database")
+            logger.info(f"Loaded {len(self.materials_cache)} materials from database")
             
         except Exception as e:
             logger.error(f"Failed to load materials: {e}")
@@ -570,7 +569,7 @@ class OrganizedSemanticPricingEngine:
         try:
             # Detect query language for response localization
             query_language = self.detect_language(query)
-            logger.info(f"🌍 Detected language: {query_language} for query: {query}")
+            logger.info(f"Detected language: {query_language} for query: {query}")
             
             # Generate query embedding using configured models
             query_embedding = self._generate_single_embedding(query)
@@ -585,7 +584,7 @@ class OrganizedSemanticPricingEngine:
                 localized_results.append(localized_result)
             
             response_time = (time.time() - start_time) * 1000
-            logger.info(f"🔍 Search '{query}' -> {len(localized_results)} results in {response_time:.1f}ms")
+            logger.info(f"Search '{query}' -> {len(localized_results)} results in {response_time:.1f}ms")
             
             return localized_results
             
@@ -1147,7 +1146,7 @@ async def generate_proposal(request: QuoteRequest):
         pricing_engine.store_quote(quote_id, request.transcript, response.dict())
         
         response_time = (time.time() - start_time) * 1000
-        logger.info(f"💰 Generated quote {quote_id} in {response_time:.1f}ms")
+        logger.info(f"Generated quote {quote_id} in {response_time:.1f}ms")
         
         return response
         
@@ -1198,7 +1197,7 @@ async def submit_feedback(request: FeedbackRequest):
             system_adaptations=adaptations
         )
         
-        logger.info(f"📝 Processed feedback {feedback_id} - {request.verdict}")
+        logger.info(f"Processed feedback {feedback_id} - {request.verdict}")
         return response
         
     except Exception as e:
