@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 """
-DONIZO SEMANTIC PRICING ENGINE - ORGANIZED PRODUCTION VERSION
-============================================================
+Donizo Semantic Pricing Engine
 
-Production-ready semantic pricing engine with proper configuration management,
-environment variables, and clean architecture.
+A FastAPI-based semantic search engine for construction materials.
+Supports quote generation, feedback learning, and multilingual queries.
 
-SPECIFICATION COMPLIANCE:
-✅ PostgreSQL + pgvector vector database
-✅ OpenAI text-embedding-3-small (with fallback)
-✅ Multilingual support (French, Spanish, Italian)
-✅ <500ms response time target
-✅ Complete API endpoints with business logic
+Built for technical assessment - implements pricing intelligence system
+that handles fuzzy queries, regional variations, and contractor workflows.
+
+Uses PostgreSQL with pgvector for semantic search, OpenAI embeddings with
+fallback model, and includes business logic for VAT, margins, and labor costs.
 """
 
 import os
@@ -156,7 +154,7 @@ class OrganizedSemanticPricingEngine:
     
     def _initialize_system(self):
         """Initialize the production system with configuration"""
-        logger.info(f"🚀 Initializing {self.settings.app.name} v{self.settings.app.version}...")
+        logger.info(f"Initializing {self.settings.app.name} v{self.settings.app.version}...")
         
         # Print configuration summary
         self.settings.print_config_summary()

@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """
-DONIZO SEMANTIC PRICING ENGINE - ORGANIZED STARTUP SCRIPT
-========================================================
+Startup script for Donizo Semantic Pricing Engine
 
-Startup script that properly initializes the organized version with
-environment configuration and proper error handling.
+Checks dependencies, sets up database, and starts the server.
+Handles environment configuration and basic error checking.
 """
 
 import os
@@ -18,7 +17,7 @@ def check_python_version():
     if sys.version_info < (3, 8):
         print("❌ Python 3.8+ is required")
         sys.exit(1)
-    print(f"✅ Python {sys.version.split()[0]} detected")
+    print(f"✓ Python {sys.version.split()[0]} detected")
 
 def check_environment_file():
     """Check if environment configuration exists"""
@@ -223,10 +222,10 @@ def start_application():
 def main():
     """Main startup routine"""
     print("""
-🏗️  DONIZO SEMANTIC PRICING ENGINE - ORGANIZED STARTUP
-====================================================
+Donizo Semantic Pricing Engine - Startup
+=========================================
 
-Initializing production-ready semantic pricing engine...
+Initializing semantic pricing engine...
 """)
     
     # Run all checks
