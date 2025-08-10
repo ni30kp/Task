@@ -682,17 +682,28 @@
       function displayQuoteResults(quote) {
         const resultsDiv = document.getElementById("quoteResults");
 
+        // Get the region from the form since it's not returned in the quote
+        const selectedRegion = document.getElementById("quoteRegion").value;
+
         let tasksHtml = "";
         quote.tasks.forEach((task) => {
           let materialsHtml = "";
-          task.materials.forEach((material) => {
-            materialsHtml += `
+          if (task.materials && task.materials.length > 0) {
+            task.materials.forEach((material) => {
+              materialsHtml += `
                         <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin: 5px 0;">
                             <strong>${material.material_name}</strong><br>
-                            Quantity: ${material.quantity} ${material.unit} × €${material.unit_price} = €${material.total_price}
+                            Price: €${material.unit_price} ${material.unit}
                         </div>
                     `;
-          });
+            });
+          } else {
+            materialsHtml = `
+                        <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin: 5px 0; color: #666;">
+                            <em>Estimated materials cost included in total</em>
+                        </div>
+                    `;
+          }
 
           tasksHtml += `
                     <div class="task-item">
@@ -721,7 +732,7 @@
                         <div>
                             <h3>Quote Generated Successfully!</h3>
                             <p><strong>Quote ID:</strong> ${quote.quote_id}</p>
-                            <p><strong>Region:</strong> ${quote.region}</p>
+                            <p><strong>Region:</strong> ${selectedRegion}</p>
                             <p><strong>VAT Rate:</strong> ${(
                               quote.vat_rate * 100
                             ).toFixed(0)}%</p>
@@ -774,20 +785,47 @@
           const data = await response.json();
 
           if (response.ok) {
-            let actionsHtml = "";
-            data.improvement_actions.forEach((action) => {
-              actionsHtml += `<li>${action}</li>`;
-            });
+            let adaptationsHtml = "";
+            if (data.system_adaptations && data.system_adaptations.length > 0) {
+              data.system_adaptations.forEach((adaptation) => {
+                adaptationsHtml += `<li>${adaptation}</li>`;
+              });
+            }
+
+            let confidenceHtml = "";
+            if (
+              data.confidence_adjustments &&
+              data.confidence_adjustments.length > 0
+            ) {
+              data.confidence_adjustments.forEach((adjustment) => {
+                confidenceHtml += `<li>${adjustment}</li>`;
+              });
+            }
+
+            let learningHtml = "";
+            if (data.learning_impact) {
+              Object.entries(data.learning_impact).forEach(([key, value]) => {
+                learningHtml += `<li><strong>${key.replace(
+                  "_",
+                  " "
+                )}:</strong> ${value}</li>`;
+              });
+            }
 
             resultsDiv.innerHTML = `
                         <div style="background: #d4edda; border: 2px solid #28a745; border-radius: 10px; padding: 20px; margin-top: 20px;">
                             <h3>✅ Feedback Submitted Successfully!</h3>
                             <p><strong>Feedback ID:</strong> ${data.feedback_id}</p>
-                            <p><strong>Message:</strong> ${data.message}</p>
-                            <p><strong>Learning Impact:</strong> ${data.learning_impact}</p>
+                            <p><strong>Status:</strong> ${data.status}</p>
                             
-                            <h4>Improvement Actions:</h4>
-                            <ul>${actionsHtml}</ul>
+                            <h4>Learning Impact:</h4>
+                            <ul>${learningHtml}</ul>
+                            
+                            <h4>System Adaptations:</h4>
+                            <ul>${adaptationsHtml}</ul>
+                            
+                            <h4>Confidence Adjustments:</h4>
+                            <ul>${confidenceHtml}</ul>
                         </div>
                     `;
 
@@ -837,24 +875,28 @@
                                 <div>Total Materials</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-number">${
-                                  data.quotes.total
-                                }</div>
-                                <div>Quotes Generated</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number">${
-                                  data.feedback.total
-                                }</div>
-                                <div>Feedback Received</div>
-                            </div>
-                            <div class="stat-card">
                                 <div class="stat-number">€${
-                                  data.quotes.total_value
-                                    ? data.quotes.total_value.toFixed(0)
+                                  data.materials.total_value
+                                    ? data.materials.total_value.toFixed(0)
                                     : "0"
                                 }</div>
-                                <div>Total Quote Value</div>
+                                <div>Total Material Value</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${
+                                  data.materials.average_price
+                                    ? data.materials.average_price.toFixed(2)
+                                    : "0"
+                                }</div>
+                                <div>Average Price (€)</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">${
+                                  data.materials.average_quality
+                                    ? data.materials.average_quality.toFixed(1)
+                                    : "0"
+                                }</div>
+                                <div>Average Quality</div>
                             </div>
                         </div>
                         
@@ -866,6 +908,26 @@
                             <div>
                                 <h4>Top Regions:</h4>
                                 <ul style="margin-top: 10px;">${regionsHtml}</ul>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; border-radius: 10px; padding: 20px; margin-top: 30px;">
+                            <h4>System Information:</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                                <div><strong>Embedding Model:</strong> ${
+                                  data.system.embedding_model
+                                }</div>
+                                <div><strong>Vector Dimension:</strong> ${
+                                  data.system.vector_dimension
+                                }D</div>
+                                <div><strong>OpenAI Available:</strong> ${
+                                  data.system.openai_available
+                                    ? "✅ Yes"
+                                    : "❌ No"
+                                }</div>
+                                <div><strong>Database:</strong> ${
+                                  data.system.database
+                                }</div>
                             </div>
                         </div>
                     `;
