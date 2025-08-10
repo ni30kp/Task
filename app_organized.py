@@ -437,7 +437,8 @@ class OrganizedSemanticPricingEngine:
         
         regions = [
             "Île-de-France", "Provence-Alpes-Côte d'Azur", "Auvergne-Rhône-Alpes",
-            "Centre-Val de Loire", "Belgium", "Luxembourg"
+            "Centre-Val de Loire", "Occitanie", "Hauts-de-France", 
+            "Belgium", "Luxembourg"
         ]
         
         # Generate materials with more diversity
